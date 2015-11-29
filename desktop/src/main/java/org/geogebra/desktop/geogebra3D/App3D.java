@@ -69,9 +69,6 @@ import org.geogebra.desktop.geogebra3D.euclidianInput3D.EuclidianControllerInput
 import org.geogebra.desktop.geogebra3D.euclidianInput3D.EuclidianViewInput3D;
 import org.geogebra.desktop.geogebra3D.gui.GuiManager3D;
 import org.geogebra.desktop.geogebra3D.gui.layout.panels.EuclidianDockPanel3DD;
-import org.geogebra.desktop.geogebra3D.input3D.Input3DFactory;
-import org.geogebra.desktop.geogebra3D.input3D.Input3DFactory.Input3DException;
-import org.geogebra.desktop.geogebra3D.input3D.Input3DFactory.Input3DExceptionType;
 import org.geogebra.desktop.geogebra3D.util.ImageManager3D;
 import org.geogebra.desktop.gui.GuiManagerD;
 import org.geogebra.desktop.gui.app.GeoGebraFrame3D;
@@ -100,184 +97,10 @@ public class App3D extends AppD {
 			AppletImplementation applet, boolean undoActive) {
 
 		super(args, frame, applet, null, undoActive, new LocalizationD(3));
-
-		runThreadForCheckInput3D();
 	}
 
 	public App3D(CommandLineArguments args, Container comp, boolean undoActive) {
 		super(args, null, null, comp, undoActive, new LocalizationD(3));
-
-		runThreadForCheckInput3D();
-	}
-
-	private class ThreadForCheckInput3D extends Thread {
-
-		private App app;
-
-		public ThreadForCheckInput3D(App app) {
-			this.app = app;
-		}
-
-		@Override
-		public void run() {
-			if (!initRealsense()) {
-				initZspace();
-			}
-		}
-
-		private boolean initRealsense() {
-			try {
-				// try to init realsense
-				Input3DFactory.initRealsense(app);
-				Log.debug("RealSense: Session successfully created");
-
-				// save in prefs
-				setInput3DType(Input3DFactory.PREFS_REALSENSE);
-
-				// show message
-				showRealSenseCongratulations();
-
-				return true;
-			} catch (Input3DException e) {
-				Log.debug(e.getMessage());
-			}
-
-			return false;
-		}
-
-		private boolean initZspace() {
-			try {
-				// try to init zSpace
-				Log.debug("zSpace: try to init");
-				Input3DFactory.initZSpace(app);
-				Log.debug("zSpace: successfully detected");
-
-				// save in prefs
-				setInput3DType(Input3DFactory.PREFS_ZSPACE);
-
-				// show message
-				showZSpaceCongratulations();
-
-				return true;
-			} catch (Input3DException e) {
-				Log.debug(e.getMessage());
-			}
-
-			return false;
-		}
-	}
-
-	private void runThreadForCheckInput3D() {
-		if (!tubeLoginIsShowing && AppD.WINDOWS && !isApplet()
-				&& has(Feature.INPUT3D)
-				&& getInput3DType().equals(Input3DFactory.PREFS_NONE)) {
-			App.debug("============ runThreadToCheckInput3D ");
-			Thread t = new ThreadForCheckInput3D(this);
-			t.start();
-		}
-	}
-	
-	/**
-	 * shows congratulations message for using realsense
-	 */
-	void showRealSenseCongratulations() {
-		showInput3DCongratulations("RealSense.DetectedMessage",
-				"https://tube-beta.geogebra.org/b/OaGmb7LE");
-	}
-
-	/**
-	 * shows congratulations message for using zspace
-	 */
-	void showZSpaceCongratulations() {
-		showInput3DCongratulations("ZSpace.DetectedMessage",
-				"https://tube-beta.geogebra.org/b/mTvZVHwm");
-
-	}
-
-
-	private void showInput3DCongratulations(final String message,
-			final String tutorialURL) {
-		// popup help dialog
-		input3DPopupShowing = true;
-		final JFrame frame = new JFrame();
-		Container c = frame.getContentPane();
-		JPanel panel = new JPanel();
-		c.add(panel);
-
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.setBackground(Color.WHITE);
-		panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
-		JLabel label = new JLabel(getMenu(message));
-		JPanel labelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		labelPanel.setBackground(Color.WHITE);
-		labelPanel.add(label);
-		panel.add(labelPanel);
-
-		JLabel website = new JLabel();
-		// String tutorialText = "Click here to get a tutorial";
-		website.setText("<html><a href=\"\">" + getMenu("OpenTutorial")
-				+ "</a></html>");
-		website.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		website.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				try {
-					try {
-						frame.setAlwaysOnTop(false);
-					} catch (SecurityException se) {
-						// failed to unset on top
-					}
-					Desktop.getDesktop().browse(new URI(tutorialURL));
-				} catch (IOException e1) {
-					// not working
-				} catch (URISyntaxException e1) {
-					// not working
-				}
-			}
-		});
-		JPanel websitePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		websitePanel.setBackground(Color.WHITE);
-		websitePanel.add(website);
-		panel.add(websitePanel);
-
-		JLabel closeLabel = new JLabel("OK");
-		closeLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		closeLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				frame.setVisible(false);
-				if (tubeLoginHasToBeShown) {
-					perspectivePopupHasToBeShown = perspectivePopupHasToBeShown
-							&& superShowTubeLogin();
-				}
-				if (perspectivePopupHasToBeShown) {
-					superShowPerspectivePopup();
-				}
-			}
-		});
-		JPanel closePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		closePanel.setBackground(Color.WHITE);
-		closePanel.add(closeLabel);
-		panel.add(closePanel);
-
-		frame.setUndecorated(true);
-
-		frame.pack();
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-		try {
-			frame.setAlwaysOnTop(true);
-		} catch (SecurityException e) {
-			// failed to set on top
-		}
-	}
-
-	/**
-	 * download and update realsense
-	 */
-	void updateRealSense() {
-		App.debug("\n========== updating RealSense");
 	}
 
 	boolean input3DPopupShowing = false;
@@ -304,7 +127,6 @@ public class App3D extends AppD {
 	@Override
 	public void isShowingLogInDialog() {
 		tubeLoginIsShowing = true;
-		runThreadForCheckInput3D();
 	}
 
 	@Override
@@ -321,24 +143,6 @@ public class App3D extends AppD {
 		super.showPerspectivePopup();
 	}
 
-	/**
-	 * set 3D input
-	 * 
-	 * @param type
-	 *            type
-	 */
-	public static void setInput3DType(String type) {
-		GeoGebraPreferencesD.getPref().setInput3DType(type);
-	}
-
-	/**
-	 * 
-	 * @return 3D input type currently used, "none" if none
-	 */
-	public static String getInput3DType() {
-		return GeoGebraPreferencesD.getPref().getInput3DType();
-	}
-
 	@Override
 	protected void initImageManager(Component component) {
 		imageManager = new ImageManager3D(component);
@@ -346,42 +150,7 @@ public class App3D extends AppD {
 
 
 	private void initEuclidianController3D() {
-
-		Input3D input3D;
-
-		if (AppD.WINDOWS && !isApplet() && has(Feature.INPUT3D)) {
-			// init the 3D euclidian view (with perhaps a specific 3D input)
-			try {
-				input3D = Input3DFactory.createInput3D(this, getInput3DType());
-			} catch (Input3DException e) {
-				if (e.getType() == Input3DExceptionType.INSTALL) {
-					// reset 3D input type, guessing 3d input has been
-					// uninstalled
-					setInput3DType(Input3DFactory.PREFS_NONE);
-				}
-				input3D = null;
-				Log.debug("Problem initializing " + e.getMessage());
-			}
-		} else {
-			input3D = null;
-		}
-
-		// input3D = null;
-		if (input3D != null) {
-			switch (input3D.getDeviceType()) {
-			case HAND:
-				euclidianController3D = new EuclidianControllerHand3D(kernel,
-						input3D);
-				break;
-			case PEN:
-			default:
-				euclidianController3D = new EuclidianControllerInput3D(kernel,
-						input3D);
-				break;
-			}
-		} else {
-			euclidianController3D = new EuclidianController3DD(kernel);
-		}
+          euclidianController3D = new EuclidianController3DD(kernel);
 	}
 
 	@Override

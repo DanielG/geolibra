@@ -22,7 +22,6 @@ import org.geogebra.common.main.App;
 import org.geogebra.common.main.GeoGebraPreferences;
 import org.geogebra.common.main.GeoGebraPreferencesXML;
 import org.geogebra.common.util.debug.Log;
-import org.geogebra.desktop.geogebra3D.input3D.Input3DFactory;
 
 /**
  * Stores user settings and options as preferences.
@@ -211,25 +210,6 @@ public class GeoGebraPreferencesD extends GeoGebraPreferences {
 	 */
 	public void saveVersionCheckAllow(String value) {
 		ggbPrefs.put(GeoGebraPreferencesD.VERSION_CHECK_ALLOW, value);
-	}
-
-	/**
-	 * set 3D input used
-	 * 
-	 * @param type
-	 *            type
-	 */
-	public void setInput3DType(String type) {
-		ggbPrefs.put(GeoGebraPreferencesD.INPUT_3D, type);
-	}
-
-	/**
-	 * 
-	 * @return 3D input type currently used, "none" if none
-	 */
-	public String getInput3DType() {
-		return ggbPrefs.get(GeoGebraPreferencesD.INPUT_3D,
-				Input3DFactory.PREFS_NONE);
 	}
 
 	/**
