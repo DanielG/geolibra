@@ -6,6 +6,6 @@ sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
 dependencies {
-	compile "com.jogamp:gluegen-rt:$joglVersion"
-	compile "com.jogamp:jogl-all:$joglVersion"
+	compile "org.jogamp.gluegen:gluegen-rt:$joglVersion"
+	compile "org.jogamp.jogl:jogl-all:$joglVersion"
 }

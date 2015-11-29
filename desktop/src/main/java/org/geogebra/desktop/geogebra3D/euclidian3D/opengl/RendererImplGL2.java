@@ -2,7 +2,7 @@ package org.geogebra.desktop.geogebra3D.euclidian3D.opengl;
 
 import java.nio.ByteBuffer;
 
-import javax.media.opengl.GL;
+import com.jogamp.opengl.GL;
 
 import org.geogebra.common.geogebra3D.euclidian3D.EuclidianView3D;
 import org.geogebra.common.geogebra3D.euclidian3D.openGL.GLBuffer;

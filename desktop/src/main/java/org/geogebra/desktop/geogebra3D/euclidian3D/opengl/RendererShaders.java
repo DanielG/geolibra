@@ -7,8 +7,8 @@ import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GLAutoDrawable;
 
 import org.geogebra.common.awt.GPoint;
 import org.geogebra.common.geogebra3D.euclidian3D.EuclidianController3D;

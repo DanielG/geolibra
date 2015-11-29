@@ -1,6 +1,6 @@
 package org.geogebra.desktop.geogebra3D.euclidian3D.opengl;
 
-import javax.media.opengl.GL;
+import com.jogamp.opengl.GL;
 
 import org.geogebra.common.geogebra3D.euclidian3D.EuclidianView3D;
 import org.geogebra.common.geogebra3D.euclidian3D.openGL.Manager;

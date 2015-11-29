@@ -2,7 +2,7 @@ package org.geogebra.desktop.geogebra3D.euclidian3D.opengl;
 
 import java.util.ArrayList;
 
-import javax.media.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLAutoDrawable;
 
 import org.geogebra.common.awt.GPoint;
 import org.geogebra.common.geogebra3D.euclidian3D.EuclidianController3D;

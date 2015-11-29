@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.nio.ShortBuffer;
 import java.util.Stack;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.fixedfunc.GLLightingFunc;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 
 import org.geogebra.common.geogebra3D.euclidian3D.EuclidianView3D;
 import org.geogebra.common.geogebra3D.euclidian3D.draw.DrawPoint3D;
@@ -150,9 +150,9 @@ public class RendererImplShadersElements implements
 		// Create GPU shader handles
 		// OpenGL ES retuns a index id to be stored for future reference.
 		vertShader = jogl.getGL2ES2().glCreateShader(
-				javax.media.opengl.GL2ES2.GL_VERTEX_SHADER);
+				com.jogamp.opengl.GL2ES2.GL_VERTEX_SHADER);
 		fragShader = jogl.getGL2ES2().glCreateShader(
-				javax.media.opengl.GL2ES2.GL_FRAGMENT_SHADER);
+				com.jogamp.opengl.GL2ES2.GL_FRAGMENT_SHADER);
 
 		// Compile the vertexShader String into a program.
 		String[] vlines = new String[] { vertexShaderString };
@@ -168,14 +168,14 @@ public class RendererImplShadersElements implements
 		// Check compile status.
 		int[] compiled = new int[1];
 		jogl.getGL2ES2().glGetShaderiv(vertShader,
-				javax.media.opengl.GL2ES2.GL_COMPILE_STATUS,
+				com.jogamp.opengl.GL2ES2.GL_COMPILE_STATUS,
 				compiled, 0);
 		if (compiled[0] != 0) {
 			System.out.println("Horray! vertex shader compiled");
 		} else {
 			int[] logLength = new int[1];
 			jogl.getGL2ES2().glGetShaderiv(vertShader,
-					javax.media.opengl.GL2ES2.GL_INFO_LOG_LENGTH, logLength, 0);
+					com.jogamp.opengl.GL2ES2.GL_INFO_LOG_LENGTH, logLength, 0);
 
 			byte[] log = new byte[logLength[0]];
 			jogl.getGL2ES2().glGetShaderInfoLog(vertShader, logLength[0],
@@ -195,14 +195,14 @@ public class RendererImplShadersElements implements
 
 		// Check compile status.
 		jogl.getGL2ES2().glGetShaderiv(fragShader,
-				javax.media.opengl.GL2ES2.GL_COMPILE_STATUS,
+				com.jogamp.opengl.GL2ES2.GL_COMPILE_STATUS,
 				compiled, 0);
 		if (compiled[0] != 0) {
 			System.out.println("Horray! fragment shader compiled");
 		} else {
 			int[] logLength = new int[1];
 			jogl.getGL2ES2().glGetShaderiv(fragShader,
-					javax.media.opengl.GL2ES2.GL_INFO_LOG_LENGTH, logLength, 0);
+					com.jogamp.opengl.GL2ES2.GL_INFO_LOG_LENGTH, logLength, 0);
 
 			byte[] log = new byte[logLength[0]];
 			jogl.getGL2ES2().glGetShaderInfoLog(fragShader, logLength[0],
